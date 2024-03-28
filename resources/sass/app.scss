@@ -1,0 +1,55 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+$fa-font-path: "../webfonts";
+
+
+//admine lte
+@import '~admin-lte/dist/css/adminlte.min.css';
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+//font awesoome
+@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~@fortawesome/fontawesome-free/scss/brands.scss";
+//datatable and select 2 css
+// @import "~datatables.net-dt/css/jquery.dataTables.css";
+// @import "~select2/dist/css/select2.css";
+.myselect {
+    max-width: 60% !important;
+    height: 100% !important;
+}
+
+.user-panel img {
+    height: auto;
+    width: 2.5rem !important;
+}
+
+.index h2 {
+    color: goldenrod;
+}
+.fixheight
+{
+    height: 400px !important;
+}
+.router-link-exact-active {
+    background-color: purple !important;
+    color: #fff !important;
+}
+::-webkit-scrollbar {
+	height:3px !important ;
+}
+::-webkit-scrollbar{
+	width:3px;
+  }
+  ::-webkit-scrollbar-thumb{
+	border-radius: 10px;
+	background: -webkit-linear-gradient( left,#E96423, #E96423) !important ;
+  }
+  ::-webkit-scrollbar-track{
+	border-radius: 10px;
+		background-color: #01356F;
+  }

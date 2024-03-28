@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link rel="shortcut icon" type="image/png" href="/images/icon.png">
+        <title>GTEL| COD</title>
+        <!-- <link rel="stylesheet" href="/css/app.css"> -->
+        <link rel="stylesheet" href="/assets/css/styles.min.css" />
+        <!-- <script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
+
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap"> -->
+        <style>
+            .modal-footer button{
+                width: 150px !important;
+                height: 40px !important;
+            }
+            .btn-info {
+                background-color: #5D87FF !important;
+            }
+        </style>
+
+    </head>
+    <!-- <body class="hold-transition sidebar-mini">
+        <div class="wrapper" id="app">
+            <div class="notification-container"></div>
+            <nav class="main-header navbar navbar-expand navbar-white navbar-light" style="background-color: #E5E6E7">
+                {{-- Navbar pour le nom de la boutique courante et la notification --}}
+                <ul class="navbar-nav" >
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars" style="color:#552561"></i></a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link">     
+                            <span id="currentBoutique" style="color:#01356F"></span>        
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="#" data-toggle="modal" data-target="#notificationModal">
+                            <i class="fas fa-bell notification-icon" style="color:#01356F"></i>
+                            <span class="notification-count" id="notification-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav> -->
+    <body>
+        <!--  Body Wrapper -->
+        <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+            <div id="app">
+                <aside class="left-sidebar">
+                    <div>
+                        <div class="brand-logo d-flex align-items-center justify-content-between">
+                            <a href="index3.html" class="brand-link">
+                                <img src="{{ asset('images/icon.png') }}" alt="GTEL Logo" class="brand-image img-circle elevation-3" style="opacity: .8;width:50px;height:50px">
+                                <span style="color: black" >GTEL COD</span>
+                            </a>
+                        </div>
+                        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+                            <ul id="sidebarnav">
+                                <li class="sidebar-item">
+                                <router-link to="/home" class="sidebar-link" aria-expanded="false">
+                                    <span>
+                                        <i class="ti ti-layout-dashboard"></i>
+                                    </span>
+                                    <span class="hide-menu">Tableau de bord</span>
+                                </router-link>
+                                </li>
+                                @can('is-super-admin')
+                                <li class="sidebar-item">
+                                <router-link to="/users" class="sidebar-link" aria-expanded="true">
+                                    <span>
+                                        <i class="ti ti-users"></i>
+                                    </span>
+                                    <span class="hide-menu">Utilisateurs</span>
+                                </router-link>
+                                </li>
+                                @endcan
+                                @can('is-admin')
+                                <li class="sidebar-item">
+                                    <router-link to="/boutiques" class="sidebar-link ">
+                                    <span>
+                                        <i class="ti ti-building-store"></i>
+                                    </span>
+                                    <span class="hide-menu">Boutiques</span>
+                                    </router-link>
+                                    @can('is-super-admin')
+                                    <ul class="sub-menu">
+                                        <li class="sidebar-item">
+                                        <router-link to="/boutiqueTypes" class="sidebar-link ">
+                                           <span>
+                                            <i class="ti ti-chevron-right"></i>
+                                           </span> 
+                                            <span  >Types</span>
+                                        </router-link>
+                                        </li>
+                                    </ul>
+                                    @endcan
+                                </li>
+                                @endcan
+                                <div class="" id="boutiqueManagement" style="display: none">
+                                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                        <li class="sidebar-item">
+                                            <router-link to="/commande" class="sidebar-link ">
+                                            <span>
+                                                <i class="ti ti-shopping-cart"></i>
+                                            </span>
+                                            <span >Commandes</span>
+                                            </router-link>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <router-link to="/product" class="sidebar-link ">
+                                                <span>
+                                                    <i class="ti ti-brand-shopee"></i>
+                                                </span>
+                                                <span >
+                                                    Produits
+                                                </span>
+                                            </router-link>
+                                            <ul  class="sub-menu">
+                                                <li class="sidebar-item">
+                                                <router-link to="/categories" class="sidebar-link ">
+                                                    <span>
+                                                        <i class="ti ti-chevron-right"></i>
+                                                    </span>
+                                                    <span  class="hide-menu">Categories</span>
+                                                </router-link>
+                                                </li>
+                                                <li class="sidebar-item">
+                                                    <router-link to="/brand" class="sidebar-link ">
+                                                        <span>
+                                                            <i class="ti ti-chevron-right"></i>
+                                                        </span>
+                                                        <span >
+                                                            Marques
+                                                        </span class="hide-menu">
+                                                    </router-link>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <router-link to="/client" class="sidebar-link ">
+                                                <span>
+                                                    <i class="ti ti-user"></i>
+                                                </span>
+                                                <span >
+                                                    Clients
+                                                </span>
+                                            </router-link>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <router-link to="/transaction" class="sidebar-link ">
+                                                <span>
+                                                    <i class="ti ti-arrows-exchange-2"></i>
+                                                </span>
+                                                <span >
+                                                Transactions
+                                                </span>
+                                            </router-link>
+                                        </li>
+
+                                        <li class="sidebar-item">
+                                            <a class="sidebar-link facture">
+                                                <span>
+                                                    <i class="ti ti-file-dollar"></i>
+                                                </span>
+                                                <span >
+                                                    Factures
+                                                </span>
+                                            </a>
+                                            <ul class="sub-menu" id="factureSubMenu">
+                                                <li class="sidebar-item">
+                                                    <router-link to="/facture-direct" class="sidebar-link ">
+                                                        <span>
+                                                            <i class="ti ti-chevron-right"></i>
+                                                        </span>
+                                                        <span >Direct</span>   
+                                                    </router-link>
+                                                </li>
+                                                <li class="sidebar-item">
+                                                    <router-link to="/facture-process" class="sidebar-link ">
+                                                        <span>
+                                                            <i class="ti ti-chevron-right"></i>
+                                                        </span>
+                                                        <span >Process</span>   
+                                                    </router-link>
+                                                </li>
+                                                <li class="sidebar-item">
+                                                    <router-link to="/facture-transaction" class="sidebar-link ">
+                                                        <span>
+                                                            <i class="ti ti-chevron-right"></i>
+                                                        </span>
+                                                        <span >Transaction</span>   
+                                                    </router-link>
+                                                </li> 
+                                            </ul>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <router-link to="/societe-transport" class="sidebar-link ">
+                                                <span>
+                                                    <i class="ti ti-truck-delivery"></i>
+                                                </span>
+                                                <span > Sociétés de transport </span>
+                                            </router-link>
+                                        </li>
+                                        <div id="societeTransportManagement" class="hidden">
+                                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                                <li class="sidebar-item">
+                                                    <router-link to="/livreur" class="sidebar-link ">
+                                                        <span>
+                                                            <i class="ti ti-friends"></i>
+                                                        </span>
+                                                        <span >
+                                                            Livreurs
+                                                        </span>
+                                                    </router-link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <li class="sidebar-item">
+                                            <router-link to="/pointVente" class="sidebar-link ">
+                                                <span>
+                                                    <i class="ti ti-map-pin"></i>
+                                                </span>
+                                                <span >
+                                                    Point de ventes
+                                                </span>
+                                            </router-link>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a class="sidebar-link depense">
+                                               <span>
+                                                <i class="ti ti-moneybag"></i>
+                                               </span>
+                                                <span >
+                                                    Dépenses
+                                                </span>
+                                            </a>
+                                            <ul class="sub-menu " id="depenseSubMenu">
+                                                <li class="sidebar-item">
+                                                    <router-link to="/business_expense" class="sidebar-link">
+                                                        <span>
+                                                            <i class="ti ti-chevron-right"></i>
+                                                        </span>
+                                                        <span >De l'Entreprise</span>
+                                                    </router-link>
+                                                </li>
+                                                <li class="sidebar-item">
+                                                    <router-link to="/team_expense" class="sidebar-link">
+                                                        <span>
+                                                            <i class="ti ti-chevron-right"></i>
+                                                        </span>
+                                                        <span >De l'equipe</span>
+                                                    </router-link>
+                                                </li>
+                                                <li class="sidebar-item parametre">
+                                                    <router-link to="/category_expense" class="sidebar-link">
+                                                        <span>
+                                                            <i class="ti ti-chevron-right"></i>
+                                                        </span>
+                                                        <span >Catégories</span>
+                                                    </router-link>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <router-link to="/messageries" class="sidebar-link ">
+                                                <span>
+                                                 <i class="ti ti-message"></i>
+                                                </span>
+                                                <span >
+                                                Messageries
+                                                </span>
+                                            </router-link>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @can('is-super-admin')
+                                <li class="sidebar-item">
+                                    <router-link to="/fournisseurs" class="sidebar-link ">
+                                        <span>
+                                            <i class="ti ti-user"></i>
+                                        </span>
+                                        <span >
+                                        Fournisseurs
+                                        </span>
+                                    </router-link>
+                                </li>
+                                @endcan
+                                @can('is-livreur')
+                                <li class="sidebar-item">
+                                    <router-link to="/assignedCommande" class="sidebar-link ">
+                                        <span>
+                                            <i class="ti ti-shopping-cart"></i>
+                                        </span>
+                                        <span >
+                                            Mes commandes
+                                        </span>
+                                    </router-link>
+                                </li>
+                                <li class="sidebar-item">
+                                    <router-link to="/expenseLivreur" class="sidebar-link ">
+                                        <span>
+                                            <i class="ti ti-moneybag"></i>
+                                        </span>
+                                        <span >
+                                            Mes depenses
+                                        </span>
+                                    </router-link>
+                                </li>
+                                @endcan
+                                <li class="sidebar-item has-treeview ">
+                                    <a class="sidebar-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <span>
+                                         <i class="ti ti-power red"></i>
+                                        </span>
+                                        <span >{{ __('Se déconnecter') }}</span>
+                                    </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                <li>
+                            </ul>
+                        </nav>
+                    </div>
+                </aside>
+                <div class="body-wrapper">
+                    <!--  Header Start -->
+                    <header class="app-header">
+                        <nav class="navbar navbar-expand-lg navbar-light">
+                            <ul class="navbar-nav">
+                                <!-- <li class="nav-item d-block d-xl-none">
+                                    <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+                                    <i class="ti ti-menu-2"></i>
+                                    </a>
+                                </li> -->
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link nav-icon-hover" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars" style="color:#552561"></i></a>
+                                </li> -->
+                                <li class="nav-item">
+                                    <a class="nav-link nav-icon-hover">     
+                                        <span id="currentBoutique" ></span>        
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+                                    <i class="ti ti-bell-ringing"></i>
+                                    <div class="notification bg-primary rounded-circle"></div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+                                <li class="nav-item dropdown">
+                                <a class="nav-link nav-icon-hover" id="drop2" 
+                                    aria-expanded="false">
+                                    <img src="{{ asset('/images/profiles/' . auth()->user()->image) }}" alt="" width="35" height="35" class="rounded-circle">
+
+                                    <router-link to="/profile" class="d-block" style="color: black"> {{ auth()->user()->name}}</router-link>
+                                </a>
+                                </li>
+                            </ul>
+                            </div>
+                        </nav>
+                    </header>
+                    <!--  Header End -->
+                    <div class="container-fluid">
+                        <router-view></router-view>
+                    </div>
+                </div>
+                <!-- <nav class="main-header navbar navbar-expand navbar-white navbar-light" style="background-color: #E5E6E7">
+                {{-- Navbar pour le nom de la boutique courante et la notification --}}
+                <ul class="navbar-nav" >
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars" style="color:#552561"></i></a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link">     
+                            <span id="currentBoutique" style="color:#01356F"></span>        
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="#" data-toggle="modal" data-target="#notificationModal">
+                            <i class="fas fa-bell notification-icon" style="color:#01356F"></i>
+                            <span class="notification-count" id="notification-count">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>  -->
+                <!-- <div class="content-wrapper" style="background-color: #FFFFFF !important;">
+                    <div class="content-header mt-3 ml-5">
+                    </div>
+                    <div class="content">
+                        <div style="container-fluid">
+
+                            <router-view></router-view>
+                            <vue-progress-bar></vue-progress-bar>
+
+                        </div>
+                    </div>
+                </div> -->
+                <!-- <aside class="control-sidebar control-sidebar-dark">
+
+                    <div class="span-3">
+                    <h5>Title</h5>
+                    <span>Sidebar content</span>
+                    </div>
+                </aside> -->
+            </div>
+        </div>
+
+        <!-- REQUIRED SCRIPTS -->
+        <!-- <script src="{{asset('js/app.js')}}"></script> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        @auth
+        <script>
+            window.user = @json(auth()->user())
+        </script>    
+        @endauth
+        <script src="js/sidebarmenu.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script  src="/js/app.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+        <script src="/plugins/chart.js/chart.min.js"></script>
+        <script>
+ 
+            document.addEventListener('DOMContentLoaded', function() {
+                const produitsLink = document.querySelector('a[href="/product"]');
+                const boutiquesLink = document.querySelector('a[href="/boutiques"]');
+                const facturesLink = document.querySelector('.facture');
+                const depensesLink = document.querySelector('.depense');
+
+                const produitsSubMenu = produitsLink.nextElementSibling;
+                const boutiquesSubMenu = boutiquesLink.nextElementSibling;
+                const facturesSubMenu = document.getElementById('factureSubMenu');
+                const depensesSubMenu = document.getElementById('depenseSubMenu');
+
+                // const facturesSubMenu = facturesLink.nextElementSibling.querySelector('factureSubMenu');
+
+                function hideAllSubMenus() {
+                    const allSubMenus = document.querySelectorAll(".sub-menu");
+                        allSubMenus.forEach(subMenu => {
+                            subMenu.style.display = "none";
+                        });
+                }
+
+                const isSubMenuVisible = localStorage.getItem('isSubMenuVisible');
+                if (isSubMenuVisible === 'true') {
+                    hideAllSubMenus();
+                    const lastActiveSubMenu = localStorage.getItem('lastActiveSubMenu');
+                    if (lastActiveSubMenu === 'produits') {
+                        produitsSubMenu.style.display = "block";
+                    } else if (lastActiveSubMenu === 'boutiques') {
+                        boutiquesSubMenu.style.display = "block";
+                    } else if (lastActiveSubMenu === 'factures') {
+                        facturesSubMenu.style.display = "block";
+                    }else if (lastActiveSubMenu === 'depenses') {
+                        depensesSubMenu.style.display = "block";
+                    }
+                } else {
+                    hideAllSubMenus();
+                }
+
+                function handleSubMenuClick(link, subMenuName, subMenu) {
+                    link.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        const isVisible = subMenu.style.display === "block";
+
+                        if (isVisible) {
+                            subMenu.style.display = "none";
+                            localStorage.setItem('isSubMenuVisible', 'false');
+                        } else {
+                            hideAllSubMenus();
+                            subMenu.style.display = "block";
+                            localStorage.setItem('isSubMenuVisible', 'true');
+                            localStorage.setItem('lastActiveSubMenu', subMenuName);
+                        }
+                    });
+                }
+                handleSubMenuClick(produitsLink, 'produits', produitsSubMenu);
+                handleSubMenuClick(boutiquesLink, 'boutiques', boutiquesSubMenu);
+                handleSubMenuClick(facturesLink, 'factures', facturesSubMenu);
+                handleSubMenuClick(depensesLink, 'depenses', depensesSubMenu);
+                // handleSubMenuClick(parametresLink, 'parametres', parametresSubMenu);
+
+                const notificationCountElement = document.getElementById('notification-count');
+                const notificationIcon = document.querySelector('.notification-icon');
+
+                // Récupérez les notifications depuis le backend et mettez à jour le nombre de notifications non lues
+                function fetchNotifications() {
+                    // Remplacez 'api/getNotifications' par l'endpoint qui récupère les notifications pour l'utilisateur connecté
+                    axios.get('api/getNotifications')
+                        .then(response => {
+                            const notifications = response.data.notifications;
+                            const unreadNotifications = response.data.notificationsRead;
+                            const notificationCount = unreadNotifications.length;
+
+                            // Mis à jour le nombre de notifications non lues dans l'icône de cloche
+                            notificationCountElement.innerText = notificationCount;
+
+                            if (notificationCount > 0) {
+                                notificationCountElement.classList.add('badge', 'badge-success');
+                                notificationCountElement.classList.remove('badge', 'badge-danger');
+                            } else {
+                                notificationCountElement.classList.remove('badge', 'badge-success');
+                                notificationCountElement.classList.add('badge', 'badge-danger');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erreur lors de la récupération des notifications :', error);
+                        });
+                }
+
+                // Affichez les notifications lorsque l'icône de cloche est cliquée
+                document.querySelector('.notification-icon').addEventListener('click', function() {
+                    // Remplacez 'api/getNotifications' par l'endpoint qui récupère les notifications pour l'utilisateur connecté
+                    axios.get('api/getNotifications')
+                        .then(response => {
+                            const notifications = response.data.notificationsRead;
+                            // Affichez les notifications dans une fenêtre modale
+                            const notificationModal = document.getElementById('notificationModal');
+                            const modalBody = notificationModal.querySelector('.modal-body');
+                            modalBody.innerHTML = ''; // Vide le contenu du modalBody
+
+                            if (notifications.length === 0) {
+                                    // S'il n'y a pas de notifications, afficher le message approprié
+                                    modalBody.innerHTML = '<span>Aucune notification pour l\'instant.</span>';
+                                } else {
+                                    // Parcourez les notifications et ajoutez-les au modalBody
+                                    notifications.forEach(notification => {
+                                        // Ici, vous pouvez personnaliser le style de la notification comme vous le souhaitez
+                                        const notificationStyle = notification.is_read ? 'read-notification' : 'unread-notification';
+                                        modalBody.innerHTML += `<span class="${notificationStyle}">${notification.message}</span>`;
+                                    });
+                                }
+
+
+                        // Ouvrez le modal
+                        $(notificationModal).modal('show');
+                        const notificationModale = document.getElementById('notificationModal');
+                        const closeModalButton = notificationModale.querySelector('.btn-secondary');
+                        closeModalButton.addEventListener('click', function() {
+                            // Fermez le modal
+                            $(notificationModal).modal('hide');
+                        });
+                        // Après avoir affiché les notifications, marquez-les comme lues sur le serveur
+                        // Remplacez 'api/markNotificationsAsRead' par l'endpoint pour marquer les notifications comme lues
+                        axios.post('api/markNotificationsAsRead')
+                            .then(response => {
+                                // Après avoir marqué les notifications comme lues, mettez à jour le nombre de notifications non lues
+                                fetchNotifications();
+                            })
+                            .catch(error => {
+                                console.error('Erreur lors du marquage des notifications comme lues :', error);
+                            });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des notifications :', error);
+                    });
+                });
+
+                // Récupérez les notifications lors du chargement de la page
+                fetchNotifications();
+            });
+        </script>
+
+        <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Le contenu des notifications sera ajouté ici -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>
